@@ -1,3 +1,11 @@
+const PORT = 5000;
+const express = require("express");
+const server = express();
+
+server.listen(PORT, () => {
+  console.log("The server is up on port", PORT);
+});
+
 const { Client } = require("pg");
 
 const client = new Client("postgres://localhost:5432/juicebox-dev");
