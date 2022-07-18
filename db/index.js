@@ -1,18 +1,3 @@
-const PORT = 5000;
-const express = require("express");
-const server = express();
-const apiRouter = require("../api");
-server.use("../api", apiRouter);
-
-const morgan = require("morgan");
-server.use(morgan("dev"));
-
-server.use(express.json());
-
-server.listen(PORT, () => {
-  console.log("The server is up on port", PORT);
-});
-
 const { Client } = require("pg");
 
 const client = new Client("postgres://localhost:5432/juicebox-dev");
@@ -203,13 +188,8 @@ async function createTags(tagList) {
     return;
   }
 
-  // need something like: $1), ($2), ($3
   const insertValues = tagList.map((_, index) => `$${index + 1}`).join("), (");
-  // then we can use: (${ insertValues }) in our string template
-
-  // need something like $1, $2, $3
   const selectValues = tagList.map((_, index) => `$${index + 1}`).join(", ");
-  // then we can use (${ selectValues }) in our string template
 
   try {
     await client.query(
@@ -327,6 +307,25 @@ async function getPostsByTagName(tagName) {
   }
 }
 
+async function getUserByUsername(username) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      SELECT *
+      FROM users
+      WHERE username=$1;
+    `,
+      [username]
+    );
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
   createUser,
@@ -342,4 +341,5 @@ module.exports = {
   addTagsToPost,
   getPostById,
   getPostsByTagName,
+  getUserByUsername,
 };
