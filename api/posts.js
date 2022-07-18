@@ -7,18 +7,12 @@ postsRouter.post("/", requireUser, async (req, res, next) => {
   const postData = { authorId, title };
   const post = await createPost(postData);
 
-  // only send the tags if there are some to send
   if (tagArr.length) {
     postData.tags = tagArr;
     res.send({ post });
   }
 
   try {
-    // add authorId, title, content to postData objectxxx
-    // const post = await createPost(postData);xxx
-    // this will create the post and the tags for us
-    // if the post comes back, res.send({ post });
-    // otherwise, next an appropriate error object
   } catch ({ name, message }) {
     next({ name, message });
   }

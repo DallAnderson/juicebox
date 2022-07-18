@@ -1,3 +1,4 @@
+const { PORT = 5000 } = process.env;
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../db");
